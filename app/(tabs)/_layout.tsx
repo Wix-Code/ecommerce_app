@@ -1,3 +1,4 @@
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -36,11 +37,20 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="search"
+        options={{
+          title: "Search",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="search" size={22} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="saved"
         options={{
           title: "Saved",
           tabBarIcon: ({ color, size }) => (
-            <Fontisto name="heart" size={20} color={color} />
+            <Fontisto name="heart" size={19} color={color} />
           ),
         }}
       />
@@ -49,7 +59,7 @@ export default function TabLayout() {
         options={{
           title: "Cart",
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome6 name="cart-shopping" size={22} color={color} />
+            <FontAwesome6 name="cart-shopping" size={21} color={color} />
           ),
         }}
       />
@@ -60,7 +70,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
               name="account-circle"
-              size={22}
+              size={24}
               color={color}
             />
           ),
