@@ -53,9 +53,7 @@ export default function Account() {
         <View>
           <Text style={styles.headerTitle}>Account</Text>
         </View>
-        <TouchableOpacity
-          onPress={() => router.push("/(tabs)/(home)/notifications")}
-        >
+        <TouchableOpacity onPress={() => router.back()}>
           <FontAwesome5 name="bell" size={24} color="black" />
         </TouchableOpacity>
       </View>

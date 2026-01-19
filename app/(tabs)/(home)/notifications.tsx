@@ -1,30 +1,36 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
-import Feather from '@expo/vector-icons/Feather';
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { notifications } from "@/app/dummyData";
+import Feather from "@expo/vector-icons/Feather";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { router } from "expo-router";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Notifications() {
   const hasNotifications = notifications && notifications.length > 0;
 
   return (
-    <SafeAreaView edges={['top']} style={styles.safe}>
+    <SafeAreaView edges={["top"]} style={styles.safe}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
           <Feather name="arrow-left" size={24} color="black" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Notifications</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="ellipsis-horizontal" size={24} color="black" />
         </TouchableOpacity>
       </View>
 
       {hasNotifications ? (
         // Notifications List
-        <ScrollView 
+        <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
@@ -34,21 +40,23 @@ export default function Notifications() {
               <View key={index} style={styles.timeSection}>
                 <Text style={styles.time}>{noti.time}</Text>
                 {noti.notify.map((note, noteIndex) => (
-                  <TouchableOpacity 
-                    key={noteIndex} 
+                  <TouchableOpacity
+                    key={noteIndex}
                     style={styles.notificationCard}
                     activeOpacity={0.7}
                   >
                     <View style={styles.iconContainer}>
-                      <FontAwesome6 
-                        name={note.icon} 
-                        size={20} 
-                        color={note.iconColor} 
+                      <FontAwesome6
+                        name={note.icon}
+                        size={20}
+                        color={note.iconColor}
                       />
                     </View>
                     <View style={styles.notificationContent}>
                       <Text style={styles.notificationTitle}>{note.title}</Text>
-                      <Text style={styles.notificationMessage}>{note.note}</Text>
+                      <Text style={styles.notificationMessage}>
+                        {note.note}
+                      </Text>
                     </View>
                   </TouchableOpacity>
                 ))}

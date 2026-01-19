@@ -169,3 +169,46 @@ export const account = [
     ],
   },
 ];
+
+export const buttons = [
+  {
+    id: 1,
+    name: "General Notification",
+  },
+  {
+    id: 2,
+    name: "Sound",
+  },
+  {
+    id: 3,
+    name: "Vibrate",
+  },
+  {
+    id: 4,
+    name: "Special Offers",
+  },
+  {
+    id: 5,
+    name: "Promo & Discount",
+  },
+  {
+    id: 6,
+    name: "Payments",
+  },
+  {
+    id: 7,
+    name: "Cashback",
+  },
+  {
+    id: 8,
+    name: "App Updates",
+  },
+  {
+    id: 9,
+    name: "New Service Available",
+  },
+  {
+    id: 10,
+    name: "New Tips Available",
+  },
+];
