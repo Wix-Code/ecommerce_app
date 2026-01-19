@@ -1,16 +1,22 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
-import Feather from '@expo/vector-icons/Feather';
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { saved } from "@/app/dummyData";
-import Fontisto from '@expo/vector-icons/Fontisto';
+import Feather from "@expo/vector-icons/Feather";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { router } from "expo-router";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Saved() {
   const hasSavedItems = saved && saved.length > 0;
 
   return (
-    <SafeAreaView edges={['top']} style={styles.safe}>
+    <SafeAreaView edges={["top"]} style={styles.safe}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
@@ -24,27 +30,27 @@ export default function Saved() {
 
       {hasSavedItems ? (
         // Saved Items Grid
-        <ScrollView 
+        <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.gridContainer}>
             {saved.map((item, index) => (
-              <TouchableOpacity 
-                key={item.id} 
+              <TouchableOpacity
+                key={item.id}
                 style={styles.productCard}
                 activeOpacity={0.8}
               >
                 {/* Product Image */}
                 <View style={styles.imageContainer}>
-                  <Image 
-                    source={item.img} 
+                  <Image
+                    source={item.img}
                     style={styles.productImage}
                     resizeMode="cover"
                   />
                   {/* Heart Icon */}
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     style={styles.heartButton}
                     activeOpacity={0.7}
                   >
@@ -73,9 +79,9 @@ export default function Saved() {
           <Text style={styles.emptyMessage}>
             You don't have any saved items. Go to home and add some.
           </Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.browseButton}
-            onPress={() => router.push("/(tabs)")}
+            onPress={() => router.push("/(tabs)/(home)")}
             activeOpacity={0.8}
           >
             <Text style={styles.browseButtonText}>Browse Products</Text>
@@ -101,9 +107,10 @@ const styles = StyleSheet.create({
     borderBottomColor: "#F5F5F5",
   },
   headerTitle: {
-    fontSize: 18,
-    fontFamily: "OpenSans_600SemiBold",
+    fontSize: 24,
+    fontFamily: "OpenSans_700Bold",
     color: "#1A1A1A",
+    letterSpacing: -2,
   },
   scrollView: {
     flex: 1,

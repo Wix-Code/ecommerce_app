@@ -97,8 +97,8 @@ const styles = StyleSheet.create({
     borderBottomColor: "#F5F5F5",
   },
   headerTitle: {
-    fontSize: 18,
-    fontFamily: "OpenSans_600SemiBold",
+    fontSize: 24,
+    fontFamily: "OpenSans_700Bold",
     color: "#1A1A1A",
   },
   scrollView: {

@@ -1,39 +1,46 @@
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
-import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import AntDesign from '@expo/vector-icons/AntDesign'
-import { Link } from 'expo-router'
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
-import Ionicons from '@expo/vector-icons/Ionicons'
-import { Formik } from 'formik'
-import * as Yup from 'yup'
+import AntDesign from "@expo/vector-icons/AntDesign";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Link } from "expo-router";
+import { Formik } from "formik";
+import React, { useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import * as Yup from "yup";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
-    .email('Invalid email address')
-    .required('Email is required'),
+    .email("Invalid email address")
+    .required("Email is required"),
   password: Yup.string()
-    .min(8, 'Password must be at least 8 characters')
-    .required('Password is required'),
-})
+    .min(8, "Password must be at least 8 characters")
+    .required("Password is required"),
+});
 
 const GoogleIcon = () => (
   <View style={styles.googleIconContainer}>
     <Text style={styles.googleIconText}>G</Text>
   </View>
-)
+);
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = (values: any) => {
-    console.log(values)
+    console.log(values);
     // Handle login logic here
-  }
+  };
 
   return (
-    <SafeAreaView edges={['top']} style={styles.safe}>
+    <SafeAreaView edges={["top"]} style={styles.safe}>
       {/* Fixed Header */}
       <View style={styles.header}>
         <Text style={styles.create}>Login to your account</Text>
@@ -41,40 +48,60 @@ export default function Login() {
       </View>
 
       {/* Scrollable Content */}
-      <ScrollView 
-        contentContainerStyle={styles.scrollContainer} 
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>
           <Formik
-            initialValues={{ email: '', password: '' }}
+            initialValues={{ email: "", password: "" }}
             validationSchema={LoginSchema}
             onSubmit={handleLogin}
           >
-            {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+            }) => (
               <View style={styles.formContainer}>
                 {/* Email Input */}
                 <View style={styles.contain}>
                   <Text style={styles.text}>Email</Text>
-                  <View style={[
-                    styles.flex,
-                    touched.email && errors.email && styles.inputError,
-                    touched.email && !errors.email && values.email && styles.inputSuccess
-                  ]}>
+                  <View
+                    style={[
+                      styles.flex,
+                      touched.email && errors.email && styles.inputError,
+                      touched.email &&
+                        !errors.email &&
+                        values.email &&
+                        styles.inputSuccess,
+                    ]}
+                  >
                     <TextInput
-                      placeholder='Enter your email address'
+                      placeholder="Enter your email address"
                       style={styles.input}
-                      onChangeText={handleChange('email')}
-                      onBlur={handleBlur('email')}
+                      onChangeText={handleChange("email")}
+                      onBlur={handleBlur("email")}
                       value={values.email}
-                      keyboardType='email-address'
-                      autoCapitalize='none'
+                      keyboardType="email-address"
+                      autoCapitalize="none"
                     />
                     {touched.email && !errors.email && values.email && (
-                      <FontAwesome6 name="check-circle" size={20} color="#0C9409" />
+                      <FontAwesome6
+                        name="check-circle"
+                        size={20}
+                        color="#0C9409"
+                      />
                     )}
                     {touched.email && errors.email && (
-                      <AntDesign name="exclamation-circle" size={20} color="#ED1010" />
+                      <AntDesign
+                        name="exclamation-circle"
+                        size={20}
+                        color="#ED1010"
+                      />
                     )}
                   </View>
                   {touched.email && errors.email && (
@@ -85,21 +112,28 @@ export default function Login() {
                 {/* Password Input */}
                 <View style={styles.contain}>
                   <Text style={styles.text}>Password</Text>
-                  <View style={[
-                    styles.flex,
-                    touched.password && errors.password && styles.inputError,
-                    touched.password && !errors.password && values.password && styles.inputSuccess
-                  ]}>
+                  <View
+                    style={[
+                      styles.flex,
+                      touched.password && errors.password && styles.inputError,
+                      touched.password &&
+                        !errors.password &&
+                        values.password &&
+                        styles.inputSuccess,
+                    ]}
+                  >
                     <TextInput
-                      placeholder='Enter your password'
+                      placeholder="Enter your password"
                       style={styles.input}
-                      onChangeText={handleChange('password')}
-                      onBlur={handleBlur('password')}
+                      onChangeText={handleChange("password")}
+                      onBlur={handleBlur("password")}
                       value={values.password}
                       secureTextEntry={!showPassword}
-                      autoCapitalize='none'
+                      autoCapitalize="none"
                     />
-                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                    <TouchableOpacity
+                      onPress={() => setShowPassword(!showPassword)}
+                    >
                       <Ionicons
                         name={showPassword ? "eye-outline" : "eye-off-outline"}
                         size={20}
@@ -124,7 +158,8 @@ export default function Login() {
                 <TouchableOpacity
                   style={[
                     styles.createButton,
-                    (!values.email || !values.password) && styles.createButtonDisabled
+                    (!values.email || !values.password) &&
+                      styles.createButtonDisabled,
                   ]}
                   onPress={() => handleSubmit()}
                   activeOpacity={0.8}
@@ -154,19 +189,23 @@ export default function Login() {
           <TouchableOpacity style={styles.facebookButton} activeOpacity={0.8}>
             <View style={styles.socialButtonContent}>
               <FontAwesome5 name="facebook" size={24} color="white" />
-              <Text style={styles.facebookButtonText}>Sign In with Facebook</Text>
+              <Text style={styles.facebookButtonText}>
+                Sign In with Facebook
+              </Text>
             </View>
           </TouchableOpacity>
 
           {/* Sign Up Link */}
           <View style={styles.loginContainer}>
             <Text style={styles.loginText}>Don't have an account? </Text>
-            <Link style={styles.loginLink} href="/(tabs)">Join</Link>
+            <Link style={styles.loginLink} href="/(tabs)/(home)">
+              Join
+            </Link>
           </View>
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -348,4 +387,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "OpenSans_700Bold",
   },
-})
+});

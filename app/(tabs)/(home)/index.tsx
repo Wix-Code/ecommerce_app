@@ -1,42 +1,52 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, TextInput } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { saved } from "@/app/dummyData";
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { router } from "expo-router";
 import { useState } from "react";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const categories = [
-  { id: 'all', name: 'All' },
-  { id: 'shoes', name: 'Shoes' },
-  { id: 'shirts', name: 'Shirts' },
-  { id: 'jeans', name: 'Jeans' },
-  { id: 'jackets', name: 'Jackets' },
-  { id: 'accessories', name: 'Accessories' },
-  { id: 'sportswear', name: 'Sportswear' },
+  { id: "all", name: "All" },
+  { id: "shoes", name: "Shoes" },
+  { id: "shirts", name: "Shirts" },
+  { id: "jeans", name: "Jeans" },
+  { id: "jackets", name: "Jackets" },
+  { id: "accessories", name: "Accessories" },
+  { id: "sportswear", name: "Sportswear" },
 ];
 
 export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Filter products based on category and search
-  const filteredProducts = saved.filter(item => {
-    const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredProducts = saved.filter((item) => {
+    const matchesCategory =
+      selectedCategory === "all" || item.category === selectedCategory;
+    const matchesSearch = item.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
   const hasProducts = filteredProducts && filteredProducts.length > 0;
 
   return (
-    <SafeAreaView edges={['top']} style={styles.safe}>
+    <SafeAreaView edges={["top"]} style={styles.safe}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Discover</Text>
-        <TouchableOpacity onPress={() => router.push('/notifications')}>
+        <TouchableOpacity onPress={() => router.push("/notifications")}>
           <FontAwesome5 name="bell" size={24} color="black" />
         </TouchableOpacity>
       </View>
@@ -45,8 +55,8 @@ export default function Home() {
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
           <Ionicons name="search" size={20} color="#808080" />
-          <TextInput 
-            placeholder="Search for clothes..." 
+          <TextInput
+            placeholder="Search for clothes..."
             style={styles.searchInput}
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -63,8 +73,8 @@ export default function Home() {
 
       {/* Categories - Horizontal Scroll */}
       <View style={styles.categoriesWrapper}>
-        <ScrollView 
-          horizontal 
+        <ScrollView
+          horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.categoriesContainer}
         >
@@ -74,14 +84,16 @@ export default function Home() {
               onPress={() => setSelectedCategory(category.id)}
               style={[
                 styles.categoryChip,
-                selectedCategory === category.id && styles.categoryChipActive
+                selectedCategory === category.id && styles.categoryChipActive,
               ]}
               activeOpacity={0.7}
             >
-              <Text style={[
-                styles.categoryText,
-                selectedCategory === category.id && styles.categoryTextActive
-              ]}>
+              <Text
+                style={[
+                  styles.categoryText,
+                  selectedCategory === category.id && styles.categoryTextActive,
+                ]}
+              >
                 {category.name}
               </Text>
             </TouchableOpacity>
@@ -91,27 +103,27 @@ export default function Home() {
 
       {hasProducts ? (
         // Products Grid
-        <ScrollView 
+        <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.gridContainer}>
             {filteredProducts.map((item) => (
-              <TouchableOpacity 
-                key={item.id} 
+              <TouchableOpacity
+                key={item.id}
                 style={styles.productCard}
                 activeOpacity={0.8}
               >
                 {/* Product Image */}
                 <View style={styles.imageContainer}>
-                  <Image 
-                    source={item.img} 
+                  <Image
+                    source={item.img}
                     style={styles.productImage}
                     resizeMode="cover"
                   />
                   {/* Heart Icon */}
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     style={styles.heartButton}
                     activeOpacity={0.7}
                   >
@@ -138,7 +150,8 @@ export default function Home() {
           </View>
           <Text style={styles.emptyTitle}>No Products Found!</Text>
           <Text style={styles.emptyMessage}>
-            Try adjusting your search or filters to find what you're looking for.
+            Try adjusting your search or filters to find what you're looking
+            for.
           </Text>
         </View>
       )}
@@ -164,7 +177,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontFamily: "OpenSans_700Bold",
     color: "#1A1A1A",
-    letterSpacing: -2
+    letterSpacing: -2,
   },
   searchContainer: {
     flexDirection: "row",
@@ -206,7 +219,7 @@ const styles = StyleSheet.create({
   categoriesContainer: {
     paddingHorizontal: 20,
     paddingVertical: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   categoryChip: {
     paddingVertical: 8,
@@ -217,7 +230,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     marginRight: 8,
     height: 40,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   categoryChipActive: {
     backgroundColor: "#1A1A1A",
