@@ -1,8 +1,11 @@
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -12,14 +15,14 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// Order data
-const ongoingOrders = [
+// Cart data with quantity
+const initialCartItems = [
   {
     id: 1,
     name: "Regular Fit Slogan",
     size: "M",
     price: 120,
-    status: "In transit",
+    quantity: 1,
     image: require("../../assets/images/7.jpg"),
   },
   {
@@ -27,7 +30,7 @@ const ongoingOrders = [
     name: "Cotton T-Shirt Blue",
     size: "L",
     price: 85,
-    status: "Processing",
+    quantity: 2,
     image: require("../../assets/images/1.jpg"),
   },
   {
@@ -35,40 +38,63 @@ const ongoingOrders = [
     name: "Denim Jacket",
     size: "M",
     price: 150,
-    status: "In transit",
+    quantity: 1,
     image: require("../../assets/images/2.jpg"),
   },
 ];
 
-const completedOrders = [
-  {
-    id: 1,
-    name: "Classic Running Shoes",
-    size: "10",
-    price: 110,
-    status: "Delivered",
-    image: require("../../assets/images/3.jpg"),
-    deliveredDate: "Dec 20, 2024",
-  },
-  {
-    id: 2,
-    name: "Slim Fit Jeans",
-    size: "32",
-    price: 95,
-    status: "Delivered",
-    image: require("../../assets/images/4.jpg"),
-    deliveredDate: "Dec 15, 2024",
-  },
-];
+export default function Cart() {
+  const [cartItems, setCartItems] = useState(initialCartItems);
 
-export default function Orders() {
-  const [activeTab, setActiveTab] = useState<"ongoing" | "completed">(
-    "ongoing",
+  const hasItems = cartItems.length > 0;
+
+  // Calculate totals
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
   );
+  const shipping = 10;
+  const total = subtotal + shipping;
 
-  const currentOrders =
-    activeTab === "ongoing" ? ongoingOrders : completedOrders;
-  const hasOrders = currentOrders.length > 0;
+  const handleIncrement = (id: number) => {
+    setCartItems(
+      cartItems.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
+      ),
+    );
+  };
+
+  const handleDecrement = (id: number) => {
+    setCartItems(
+      cartItems.map((item) =>
+        item.id === id && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item,
+      ),
+    );
+  };
+
+  const handleDelete = (id: number) => {
+    Alert.alert(
+      "Remove Item",
+      "Are you sure you want to remove this item from cart?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Remove",
+          style: "destructive",
+          onPress: () => {
+            setCartItems(cartItems.filter((item) => item.id !== id));
+          },
+        },
+      ],
+    );
+  };
+
+  const handleCheckout = () => {
+    // Alert.alert("Checkout", `Proceeding to checkout with total: $${total}`);
+    router.push("/(tabs)/(account)/payment-method");
+  };
 
   return (
     <SafeAreaView edges={["top"]} style={styles.safe}>
@@ -84,122 +110,114 @@ export default function Orders() {
         </TouchableOpacity>
       </View>
 
-      {/* Tabs */}
-      <View style={styles.tabContainer}>
-        <View style={styles.tabWrapper}>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === "ongoing" && styles.tabActive]}
-            onPress={() => setActiveTab("ongoing")}
-            activeOpacity={0.8}
+      {hasItems ? (
+        <View style={styles.container}>
+          {/* Cart Items */}
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
           >
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === "ongoing" && styles.tabTextActive,
-              ]}
-            >
-              Ongoing
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === "completed" && styles.tabActive]}
-            onPress={() => setActiveTab("completed")}
-            activeOpacity={0.8}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === "completed" && styles.tabTextActive,
-              ]}
-            >
-              Completed
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+            {cartItems.map((item) => (
+              <View key={item.id} style={styles.cartCard}>
+                {/* Product Image */}
+                <View style={styles.imageContainer}>
+                  <Image
+                    style={styles.productImage}
+                    source={item.image}
+                    resizeMode="cover"
+                  />
+                </View>
 
-      {hasOrders ? (
-        // Orders List
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          {currentOrders.map((order) => (
-            <View key={order.id} style={styles.orderCard}>
-              {/* Product Image */}
-              <View style={styles.imageContainer}>
-                <Image
-                  style={styles.productImage}
-                  source={order.image}
-                  resizeMode="cover"
-                />
-              </View>
-
-              {/* Order Info */}
-              <View style={styles.orderInfo}>
-                <View style={styles.orderHeader}>
-                  <View style={styles.productDetails}>
-                    <Text style={styles.productName}>
-                      {order.name.slice(0, 15)}...
-                    </Text>
-                    <Text style={styles.productSize}>Size {order.size}</Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.statusBadge,
-                      activeTab === "completed" && styles.statusBadgeCompleted,
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.statusText,
-                        activeTab === "completed" && styles.statusTextCompleted,
-                      ]}
+                {/* Product Info */}
+                <View style={styles.productInfo}>
+                  <View style={styles.productHeader}>
+                    <View style={styles.productDetails}>
+                      <Text style={styles.productName}>{item.name}</Text>
+                      <Text style={styles.productSize}>Size: {item.size}</Text>
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => handleDelete(item.id)}
+                      style={styles.deleteButton}
                     >
-                      {order.status}
-                    </Text>
+                      <MaterialCommunityIcons
+                        name="delete-outline"
+                        size={22}
+                        color="#FF3B30"
+                      />
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={styles.productFooter}>
+                    <Text style={styles.productPrice}>${item.price}</Text>
+                    <View style={styles.quantityControl}>
+                      <TouchableOpacity
+                        style={styles.quantityButton}
+                        onPress={() => handleDecrement(item.id)}
+                      >
+                        <Ionicons name="remove" size={16} color="#1A1A1A" />
+                      </TouchableOpacity>
+                      <Text style={styles.quantityText}>{item.quantity}</Text>
+                      <TouchableOpacity
+                        style={styles.quantityButton}
+                        onPress={() => handleIncrement(item.id)}
+                      >
+                        <Ionicons name="add" size={16} color="#1A1A1A" />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
+              </View>
+            ))}
+          </ScrollView>
 
-                <View style={styles.orderFooter}>
-                  <Text style={styles.productPrice}>${order.price}</Text>
-                  {activeTab === "ongoing" ? (
-                    <TouchableOpacity style={styles.trackButton}>
-                      <Text style={styles.trackButtonText}>Track order</Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity style={styles.reviewButton}>
-                      <Text style={styles.reviewButtonText}>Leave Review</Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-
-                {/* {activeTab === "completed" && order.deliveredDate && (
-                  <Text style={styles.deliveredDate}>
-                    Delivered on {order.deliveredDate}
-                  </Text>
-                )} */}
+          {/* Summary & Checkout */}
+          <View style={styles.checkoutSection}>
+            {/* Price Summary */}
+            <View style={styles.summaryCard}>
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Sub-total</Text>
+                <Text style={styles.summaryValue}>${subtotal}</Text>
+              </View>
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Shipping fee</Text>
+                <Text style={styles.summaryValue}>${shipping}</Text>
+              </View>
+              <View style={styles.divider} />
+              <View style={styles.summaryRow}>
+                <Text style={styles.totalLabel}>Total</Text>
+                <Text style={styles.totalValue}>${total}</Text>
               </View>
             </View>
-          ))}
-        </ScrollView>
+
+            {/* Checkout Button */}
+            <TouchableOpacity
+              style={styles.checkoutButton}
+              onPress={handleCheckout}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
+              <Feather name="arrow-right" size={20} color="#ffffff" />
+            </TouchableOpacity>
+          </View>
+        </View>
       ) : (
         // Empty State
         <View style={styles.emptyState}>
           <View style={styles.emptyIconContainer}>
-            <FontAwesome5 name="box" size={64} color="#E6E6E6" />
+            <Ionicons name="cart-outline" size={64} color="#E6E6E6" />
           </View>
-          <Text style={styles.emptyTitle}>
-            {activeTab === "ongoing"
-              ? "No Ongoing Orders!"
-              : "No Completed Orders!"}
-          </Text>
+          <Text style={styles.emptyTitle}>Your Cart is Empty</Text>
           <Text style={styles.emptyMessage}>
-            {activeTab === "ongoing"
-              ? "You don't have any ongoing orders\nat this time."
-              : "You don't have any completed orders\nat this time."}
+            Add items to your cart to get started
           </Text>
+          <TouchableOpacity
+            style={styles.shopButton}
+            onPress={() => router.push("/(tabs)/(home)")}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.shopButtonText}>Start Shopping</Text>
+          </TouchableOpacity>
         </View>
       )}
     </SafeAreaView>
@@ -224,54 +242,20 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: "OpenSans_700Bold",
     color: "#1A1A1A",
-    letterSpacing: -1,
+    letterSpacing: -2,
   },
-  tabContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  tabWrapper: {
-    flexDirection: "row",
-    backgroundColor: "#F5F5F5",
-    borderRadius: 10,
-    padding: 4,
-    gap: 4,
-  },
-  tab: {
+  container: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  tabActive: {
-    backgroundColor: "#ffffff",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  tabText: {
-    fontSize: 14,
-    fontFamily: "OpenSans_500Medium",
-    color: "#808080",
-  },
-  tabTextActive: {
-    color: "#1A1A1A",
-    fontFamily: "OpenSans_600SemiBold",
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
     paddingHorizontal: 20,
+    paddingTop: 16,
     paddingBottom: 20,
   },
-  orderCard: {
+  cartCard: {
     flexDirection: "row",
     gap: 12,
     padding: 12,
@@ -282,8 +266,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   imageContainer: {
-    width: 100,
-    height: 100,
+    width: 90,
+    height: 110,
     borderRadius: 8,
     overflow: "hidden",
     backgroundColor: "#F5F5F5",
@@ -292,22 +276,21 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  orderInfo: {
+  productInfo: {
     flex: 1,
     justifyContent: "space-between",
   },
-  orderHeader: {
+  productHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: 8,
   },
   productDetails: {
     flex: 1,
   },
   productName: {
     color: "#1A1A1A",
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: "OpenSans_600SemiBold",
     marginBottom: 4,
   },
@@ -316,62 +299,99 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: "OpenSans_400Regular",
   },
-  statusBadge: {
-    backgroundColor: "#FFF3E0",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
+  deleteButton: {
+    padding: 4,
   },
-  statusBadgeCompleted: {
-    backgroundColor: "#E8F5E9",
-  },
-  statusText: {
-    fontSize: 10,
-    fontFamily: "OpenSans_600SemiBold",
-    color: "#FF9800",
-  },
-  statusTextCompleted: {
-    color: "#4CAF50",
-  },
-  orderFooter: {
+  productFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   productPrice: {
     color: "#1A1A1A",
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: "OpenSans_700Bold",
   },
-  trackButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+  quantityControl: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F5F5F5",
     borderRadius: 8,
-    backgroundColor: "#1A1A1A",
+    padding: 4,
+    gap: 12,
   },
-  trackButtonText: {
-    color: "#ffffff",
-    fontSize: 12,
-    fontFamily: "OpenSans_600SemiBold",
-  },
-  reviewButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
+  quantityButton: {
+    width: 28,
+    height: 28,
+    borderRadius: 6,
     backgroundColor: "#ffffff",
-    borderWidth: 1,
-    borderColor: "#1A1A1A",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  reviewButtonText: {
-    color: "#1A1A1A",
-    fontSize: 12,
+  quantityText: {
+    fontSize: 14,
     fontFamily: "OpenSans_600SemiBold",
+    color: "#1A1A1A",
+    minWidth: 20,
+    textAlign: "center",
   },
-  deliveredDate: {
-    color: "#808080",
-    fontSize: 11,
+  checkoutSection: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderTopColor: "#F5F5F5",
+    backgroundColor: "#ffffff",
+  },
+  summaryCard: {
+    backgroundColor: "#FAFAFA",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+  },
+  summaryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  summaryLabel: {
+    fontSize: 14,
     fontFamily: "OpenSans_400Regular",
-    marginTop: 4,
+    color: "#808080",
+  },
+  summaryValue: {
+    fontSize: 14,
+    fontFamily: "OpenSans_600SemiBold",
+    color: "#1A1A1A",
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "#E6E6E6",
+    marginVertical: 8,
+  },
+  totalLabel: {
+    fontSize: 16,
+    fontFamily: "OpenSans_700Bold",
+    color: "#1A1A1A",
+  },
+  totalValue: {
+    fontSize: 18,
+    fontFamily: "OpenSans_700Bold",
+    color: "#1A1A1A",
+  },
+  checkoutButton: {
+    flexDirection: "row",
+    backgroundColor: "#1A1A1A",
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  checkoutButtonText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontFamily: "OpenSans_600SemiBold",
   },
   emptyState: {
     flex: 1,
@@ -401,5 +421,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#808080",
     lineHeight: 24,
+    marginBottom: 24,
+  },
+  shopButton: {
+    backgroundColor: "#1A1A1A",
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 10,
+  },
+  shopButtonText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontFamily: "OpenSans_600SemiBold",
   },
 });
