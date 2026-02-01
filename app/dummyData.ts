@@ -212,3 +212,90 @@ export const buttons = [
     name: "New Tips Available",
   },
 ];
+
+// // Sample product data - Replace with your actual data source
+// const PRODUCTS = [
+//   {
+//     id: 1,
+//     name: "Classic Denim Jacket",
+//     price: 89.99,
+//     originalPrice: 129.99,
+//     discount: 31,
+//     rating: 4.5,
+//     reviews: 234,
+//     description:
+//       "A timeless denim jacket crafted from premium cotton denim. Features classic button closure, chest pockets, and a comfortable regular fit. Perfect for layering in any season.",
+//     images: [
+//       require("@/assets/images/saved1.png"),
+//       require("@/assets/images/saved2.png"),
+//       require("@/assets/images/saved3.png"),
+//       require("@/assets/images/saved4.png"),
+//     ],
+//     sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+//     colors: [
+//       { name: "Blue", hex: "#4A90E2" },
+//       { name: "Black", hex: "#000000" },
+//       { name: "Light Blue", hex: "#87CEEB" },
+//     ],
+//     inStock: true,
+//     brand: "Urban Style",
+//     material: "100% Cotton Denim",
+//     care: "Machine wash cold, tumble dry low",
+//     shipping: "Free shipping on orders over $50",
+//   },
+//   // Add more products as needed
+// ];
+
+// // Related products
+// const RELATED_PRODUCTS = [
+//   {
+//     id: 2,
+//     name: "White Basic T-Shirt",
+//     price: 24.99,
+//     image: require("@/assets/images/saved2.png"),
+//     rating: 4.3,
+//   },
+//   {
+//     id: 3,
+//     name: "Black Jeans",
+//     price: 59.99,
+//     image: require("@/assets/images/saved3.png"),
+//     rating: 4.7,
+//   },
+//   {
+//     id: 4,
+//     name: "Leather Boots",
+//     price: 129.99,
+//     image: require("@/assets/images/saved4.png"),
+//     rating: 4.6,
+//   },
+// ];
+
+// // Sample reviews
+// const REVIEWS = [
+//   {
+//     id: 1,
+//     user: "Sarah M.",
+//     rating: 5,
+//     date: "2 days ago",
+//     comment: "Absolutely love this jacket! Perfect fit and great quality.",
+//     helpful: 12,
+//   },
+//   {
+//     id: 2,
+//     user: "John D.",
+//     rating: 4,
+//     date: "1 week ago",
+//     comment: "Good quality but runs a bit large. Size down for better fit.",
+//     helpful: 8,
+//   },
+//   {
+//     id: 3,
+//     user: "Emma L.",
+//     rating: 5,
+//     date: "2 weeks ago",
+//     comment:
+//       "Exactly as described. Fast shipping and excellent customer service!",
+//     helpful: 15,
+//   },
+// ];
